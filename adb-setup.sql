@@ -54,10 +54,10 @@ oci session refresh
 
 jdbc:oracle:thin:@(description= (retry_count=20)(retry_delay=3)
 (address=(protocol=tcps)(port=1522)
-(host=adb.us-chicago-1.oraclecloud.com))
-(connect_data=(service_name=g80380ebcfb1a28_omldatascinceadw_high.adb.oraclecloud.com))
+(host=adb.us-langley-1.oraclegovcloud.com))
+(connect_data=(service_name=gbded38435da8bd_xxxxxxxxxxxxxxxx_high.adb.oraclecloud.com))
 (security=(ssl_server_dn_match=yes)
-# MAC (MY_WALLET_DIRECTORY=/Users/MyUser/Desktop/Wallet_OMLDataScinceADW-2/)
+# MAC (MY_WALLET_DIRECTORY=/Users/MyUser/Desktop/Wallet_xxxxxxxxxxxxxxxx/)
 # WINDOWS (MY_WALLET_DIRECTORY=C:\Users\opc\Desktop\wallet)
 (TOKEN_AUTH=OCI_TOKEN)))
 
