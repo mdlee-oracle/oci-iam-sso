@@ -1,0 +1,4 @@
+[DEFAULT]
+tenancy=<tenancy_id>
+region=<us-ashburn-1>
+security_token_file=<C:\Users\MyUser\.oci\sessions\dba_user\token>
