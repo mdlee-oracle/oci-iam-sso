@@ -73,6 +73,9 @@ xxxxxxxxxxxxxxxx_high = (description= (retry_count=20)(retry_delay=3)(address=(p
 
 ## Connect using SQL*Plus
 
+1. Using the OCI CLI, retrieve a db token using the steps shown above
+1. Connect to the database using the service connection
+
 ```
 sqlplus /@xxxxxxxxxxxxxxxx_high
 ```
@@ -82,3 +85,14 @@ sqlplus /@xxxxxxxxxxxxxxxx_high
 ## Prerequisites
 1. OCI CLI
 1. SQLDeveloper
+
+## Configure connection using Wallet
+
+We are using the ADB [wallet](https://docs.oracle.com/en/cloud/paas/autonomous-database/serverless/adbsb/connect-download-wallet.html) to create a connection to our database. Create a new connection in SQLDeveloepr and configure the service_name and wallet directory for your particular values.
+
+![SQLDeveloper Configuration](images/sqldeveloper_db_token_configuration.png)
+
+## Connect using SQLDeveloper
+
+1. Using the OCI CLI, retrieve a db token using the steps shown above
+1. Connect to the database by double clicking your connection
