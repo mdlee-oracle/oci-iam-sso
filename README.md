@@ -84,7 +84,7 @@ sqlplus /@xxxxxxxxxxxxxxxx_high
 
 ## Prerequisites
 1. OCI CLI
-1. SQLDeveloper
+1. [SQL Developer](https://www.oracle.com/database/sqldeveloper/technologies/download/)
 
 ## Configure connection using Wallet
 
@@ -96,3 +96,56 @@ We are using the ADB [wallet](https://docs.oracle.com/en/cloud/paas/autonomous-d
 
 1. Using the OCI CLI, retrieve a db token using the steps shown above
 1. Connect to the database by double clicking your connection
+
+# Connecting to ADB-S using SQLDeveloper via ojdbc-provider-oci jars
+Unlike the previous two methods, this login process utilizes the Oracle JDBC OCI Provider to provide seamless authentication to the database - without the manual use of the OCI CLI to pull a database token. Though this process, a user attempting a connection using SQLDeveloper will be prompted to authenticate via a browser. After successful authentication, the user will have instant access to a connected SQL Window.
+
+## Prerequisites
+1. [SQL Developer](https://www.oracle.com/database/sqldeveloper/technologies/download/)
+1. [JDK](https://www.oracle.com/java/technologies/downloads/)
+1. [Apache Maven](https://maven.apache.org/)
+
+## Setup the ojdbc-extensions
+The Oracle JDBC Driver extensions extend the Oracle JDBC Driver for integration with cloud services and other specialized APIs. Specifically, for us we will be using the Oracle JDBC OCI Provider to interact with Oracle Cloud Infrastructure (OCI).
+
+The first step is building the [JDBC extensions](https://github.com/oracle/ojdbc-extensions) from the Oracle public github repository.  You can either clone this repository using [git](https://git-scm.com/) or simply just download the entire bundle.
+
+You will also need to have [Apache Maven](https://maven.apache.org/) installed which is an open source build utility. This utility is responsible for building, retrieving dependencies, and installing the libraries into your local maven repository.
+
+The commands below will create the git repo and pull the required jars from Maven Central. We will then move the oci provider and dependant jars into a single folder to make them easier for SQLDeveloper to include in a later step.
+
+```bash
+## Clone the git repo and pull the dependencies
+git clone https://github.com/oracle/ojdbc-extensions.git
+cd ojdbc-extensions/ojdbc-provider-oci
+mvn package dependency:copy-dependencies -DskipTests
+
+## Move the necessary jars into a single location
+mkdir $HOME/ojdbc-provider-oci-jars
+cp target/*.jar $HOME/ojdbc-provider-oci-jars 
+cp target/dependency/*.jar $HOME/ojdbc-provider-oci-jars
+```
+If the commands above executed successfully, the ojdbc provider jars will be staged in a folder at:
+```bash
+## Staged Location
+C:\Users\<Username>\ojdbc-provider-oci-jars
+```
+
+## Update the SQLDeveloper configuration file
+Now that you have all of the libraries that are needed for the SQLDeveloper runtime, we will be updating the SQLDeveloper configuration to load those newly acquired libraries into runtime at the next startup of the application.
+
+For a Windows setup, the default configuration is in the following location:
+```
+C:\Users\<Username>\AppData\Roaming\sqldeveloper\<version>\product.conf
+```
+For each of the jars in the staged location shown above, copy them into the `product.conf` file as follows:
+
+```
+AddJavaLibFile C:\Users\<Username>\ojdbc-provider-oci-jars\aopalliance-repackaged-2.6.1.jar
+AddJavaLibFile C:\Users\<Username>\ojdbc-provider-oci-jars\apiguardian-api-1.1.2.jar
+AddJavaLibFile C:\Users\<Username>\ojdbc-provider-oci-jars\bcpkix-jdk15to18-1.78.1.jar
+AddJavaLibFile C:\Users\<Username>\ojdbc-provider-oci-jars\bcprov-jdk15to18-1.78.1.jar
+AddJavaLibFile C:\Users\<Username>\ojdbc-provider-oci-jars\bcutil-jdk15to18-1.78.1.jar
+... continued
+```
+An example `product.conf` file can be accessed [here](example-product.conf)
