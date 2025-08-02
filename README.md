@@ -120,7 +120,13 @@ The commands below will create the git repo and pull the required jars from Mave
 ```bash
 ## Clone the git repo and pull the dependencies
 git clone https://github.com/oracle/ojdbc-extensions.git
-cd ojdbc-extensions/ojdbc-provider-oci
+
+## Pull the provider-common jars
+cd ojdbc-extensions/ojdbc-provider-common
+mvn clean install -DskipTests
+
+## Pull the provider-oci jars
+cd ../ojdbc-provider-oci
 mvn package dependency:copy-dependencies -DskipTests
 
 ## Move the necessary jars into a single location
