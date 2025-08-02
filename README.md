@@ -23,7 +23,11 @@ We will utilize the OCI CLI `oci session authenticate` command to populate the i
 oci session authenticate [OPTIONAL --region us-langley-1]
 ```
 
-2. Upon execution, a browser window will appear that will request your user's OCI IAM credentials. Enter your credentials. If successful, you will see the following message in the browser.
+2. Upon execution, a browser window will appear that will request your user's OCI IAM credentials. Enter your credentials. 
+
+![browser_challenge](images/browser_challenge.jpg)
+
+If successful, you will see the following message in the browser.
 
 ![Authorization completed](images/browser_authorization_complete.png)
 
@@ -59,8 +63,8 @@ This section will describe how to utilize OCI IAM session tokens to authenticate
 <Insert Architecture here>
 
 ## Prerequisites
-1. OCI CLI
-1. SQL*Plus
+1. [OCI CLI](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/cliinstall.htm)
+1. [SQL*Plus](https://www.oracle.com/database/technologies/instant-client.html)
 
 ## Configure connection using Wallet
 We are using the ADB [wallet](https://docs.oracle.com/en/cloud/paas/autonomous-database/serverless/adbsb/connect-download-wallet.html) to create a connection to our database. After downloading the wallet, copy the `sqlnet.ora` and `tnsnames.ora` file to your SQLPlus Instant Client directory at (ORACLE_HOME/network/admin)
@@ -83,7 +87,7 @@ sqlplus /@xxxxxxxxxxxxxxxx_high
 # Connecting to ADB-S using SQLDeveloper and DB Token
 
 ## Prerequisites
-1. OCI CLI
+1. [OCI CLI](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/cliinstall.htm)
 1. [SQL Developer](https://www.oracle.com/database/sqldeveloper/technologies/download/)
 
 ## Configure connection using Wallet
@@ -98,11 +102,10 @@ We are using the ADB [wallet](https://docs.oracle.com/en/cloud/paas/autonomous-d
 1. Connect to the database by double clicking your connection
 
 # Connecting to ADB-S using SQLDeveloper via ojdbc-provider-oci jars
-Unlike the previous two methods, this login process utilizes the Oracle JDBC OCI Provider to provide seamless authentication to the database - without the manual use of the OCI CLI to pull a database token. Though this process, a user attempting a connection using SQLDeveloper will be prompted to authenticate via a browser. After successful authentication, the user will have instant access to a connected SQL Window.
+Unlike the previous two methods, this login process utilizes the Oracle JDBC OCI Provider to provide seamless authentication to the database - without the manual use of the OCI CLI to pull a database token. Though this process, a user attempting a connection using SQLDeveloper will be prompted to authenticate via a browser.    After successful authentication, the user will have instant access to a connected SQL Window.
 
 ## Prerequisites
 1. [SQL Developer](https://www.oracle.com/database/sqldeveloper/technologies/download/)
-1. [JDK](https://www.oracle.com/java/technologies/downloads/)
 1. [Apache Maven](https://maven.apache.org/)
 
 ## Setup the ojdbc-extensions
@@ -170,3 +173,13 @@ In the properties, I have added the Advanced properties to instruct the JDBC dri
 *Note that the `region` parameter is only needed if connecting to  non-commerical OCI region. Additionally, if the policy associated with the usr is set at the tenancy level, the `scope` parameter is not required*
 
 ![SQLDeveloper Configuration](images/sqldeveloper_seamless_jdbc_advanced.png)
+
+## Test the Connection and Authenticate
+Upon selecting either the `Test` or `Connect` button - this should trigger a browser to open on your desktop.  Then, you will be sent to the Oracle Cloud Infrastructure web-based login.  Now, all you need to do is authenticate to the correct OCI tenancy and Identity Domain that has been configured as the Identity Provider of the database
+
+![browser_challenge](images/browser_challenge.jpg)
+
+If everything worked properly, then you then will be presented a blank SQL Worksheet where you can start to execute statements.  Here I am showing that my user is set to the Globally Identified Schema User, and that the enterprise authentication that is tied to this session is the user principal that I used to authenticate to OCI IAM Domain.
+
+![select_context](images/sqldeveloper_select_context.png)
+
