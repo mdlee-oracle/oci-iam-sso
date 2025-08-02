@@ -149,3 +149,24 @@ AddJavaLibFile C:\Users\<Username>\ojdbc-provider-oci-jars\bcutil-jdk15to18-1.78
 ... continued
 ```
 An example `product.conf` file can be accessed [here](example-product.conf)
+
+If SQLDeveloper is already open, be sure to restart the application to load the jars from the modified config file.
+
+## Setup the SQLDeveloper Connection
+We will now create a new connection in SQLDeveloper as shown below:
+
+![SQLDeveloper Configuration](images/sqldeveloper_seamless_jdbc_url.png)
+
+In the properties, I have added the Advanced properties to instruct the JDBC driver to trigger the OCI IAM Interactive Authentication flow by setting the following values:
+
+| Name      | Value |
+| ----------- | ----------- |
+| oracle.jdbc.provider.accessToken.authenticationMethod      | interactive       |
+| oracle.jdbc.provider.accessToken.region | us-langley-1        |
+| oracle.net.wallet_location | C:\oracle\Wallet_XXXXXXXXXXXXXXXX |
+| oracle.jdbc.provider.accessToken | ojdbc-provider-oci-token |
+| oracle.jdbc.provider.accessToken.scope   | urn:oracle:db::id::ocid1.compartment.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa::ocid1.autonomousdatabase.oc1.phx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  |
+
+*Note that the `region` parameter is only needed if connecting to  non-commerical OCI region. Additionally, if the policy associated with the usr is set at the tenancy level, the `scope` parameter is not required*
+
+![SQLDeveloper Configuration](images/sqldeveloper_seamless_jdbc_advanced.png)
