@@ -23,8 +23,11 @@ END;
 SELECT NAME, VALUE FROM V$PARAMETER WHERE NAME='identity_provider_type';
 
 -- create user and role mapped to group
-CREATE USER dba_user IDENTIFIED GLOBALLY AS 'IAM_GROUP_NAME=OracleIdentityCloudService/dba_users_group';
+CREATE USER dba_user_schema IDENTIFIED GLOBALLY AS 'IAM_GROUP_NAME=OracleIdentityCloudService/dba_users_group';
 CREATE ROLE dba_user_role IDENTIFIED GLOBALLY AS 'IAM_GROUP_NAME=OracleIdentityCloudService/dba_users_group';
+
+-- alternatively, create individual user
+-- CREATE USER jsmith IDENTIFIED GLOBALLY AS 'IAM_PRINCIPAL_NAME=OracleIdentityCloudService/john.smith@oracle.com';
 
 -- grant permissions to user and/or role
 GRANT CREATE SESSION TO dba_user_role;
@@ -70,5 +73,13 @@ jdbc:oracle:thin:@(description= (retry_count=20)(retry_delay=3)
 
 -- check connection status
 SELECT SYS_CONTEXT('USERENV','AUTHENTICATION_METHOD') FROM DUAL;
+
+-- CURRENT_USER will show the schema you are mapped to
 SELECT SYS_CONTEXT('USERENV','CURRENT_USER') FROM DUAL;
 SELECT SYS_CONTEXT('USERENV','IDENTIFICATION_TYPE') FROM DUAL;
+
+-- AUTHENTICATED_IDENTITY will be your IAM username
+SELECT SYS_CONTEXT('USERENV','AUTHENTICATED_IDENTITY') FROM DUAL;
+
+-- ENTERPRISE_IDENTITY will be your IAM user OCID
+SELECT SYS_CONTEXT('USERENV','ENTERPRISE_IDENTITY') FROM DUAL;

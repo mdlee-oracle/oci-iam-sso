@@ -8,10 +8,11 @@
 ## Initial Setup - Create OCI Config File
 For this guide, we want to use session tokens intead of API keys to ensure all access is ephemeral and nothing is stored permanently on the client. We are using the OCI CLI to grab the session and db_tokens used to authenticate to the database. Typically, the `oci setup config` command is used to create an intial OCI config. However, that process expects an API key - Which we won't have.
 
-Instead, we will create a config file at `~/.oci/config` and populate it with the following information:
-[Example Intial Configuration](example-config-initial)
+Instead, we will utilize the `oci session authenticate` as documented in the subsequent section to create the initial oci config file. This file, by default, will be created at:
 
-Modify the lines (tenancy, region, security_token_file) with your own tenancy OCID, the region you are using, and the path where you would like your security token file to be stored.
+```
+~\.oci\config
+```
 
 ## Retrieve the initial Session Token
 
@@ -65,6 +66,8 @@ This section will describe how to utilize OCI IAM session tokens to authenticate
 ## Prerequisites
 1. [OCI CLI](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/cliinstall.htm)
 1. [SQL*Plus](https://www.oracle.com/database/technologies/instant-client.html)
+1. ADB database is properly configured (Reference [adb-setup](adb-setup.sql))
+1. Wallet is downloaded for client connection
 
 ## Configure connection using Wallet
 We are using the ADB [wallet](https://docs.oracle.com/en/cloud/paas/autonomous-database/serverless/adbsb/connect-download-wallet.html) to create a connection to our database. After downloading the wallet, copy the `sqlnet.ora` and `tnsnames.ora` file to your SQLPlus Instant Client directory at (ORACLE_HOME/network/admin)
@@ -89,6 +92,8 @@ sqlplus /@xxxxxxxxxxxxxxxx_high
 ## Prerequisites
 1. [OCI CLI](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/cliinstall.htm)
 1. [SQL Developer](https://www.oracle.com/database/sqldeveloper/technologies/download/)
+1. ADB database is properly configured (Reference [adb-setup](adb-setup.sql))
+1. Wallet is downloaded for client connection
 
 ## Configure connection using Wallet
 
@@ -107,6 +112,8 @@ Unlike the previous two methods, this login process utilizes the Oracle JDBC OCI
 ## Prerequisites
 1. [SQL Developer](https://www.oracle.com/database/sqldeveloper/technologies/download/)
 1. [Apache Maven](https://maven.apache.org/)
+1. ADB database is properly configured (Reference [adb-setup](adb-setup.sql))
+1. Wallet is downloaded for client connection
 
 ## Setup the ojdbc-extensions
 The Oracle JDBC Driver extensions extend the Oracle JDBC Driver for integration with cloud services and other specialized APIs. Specifically, for us we will be using the Oracle JDBC OCI Provider to interact with Oracle Cloud Infrastructure (OCI).
@@ -189,3 +196,21 @@ If everything worked properly, then you then will be presented a blank SQL Works
 
 ![select_context](images/sqldeveloper_select_context.png)
 
+# Connecting to ExaDB-D using SQLDeveloper via ojdbc-provider-oci jars
+
+1. [SQL Developer](https://www.oracle.com/database/sqldeveloper/technologies/download/)
+1. [Apache Maven](https://maven.apache.org/)
+1. ExaDB-D database is properly configured (Reference [exadb-d-setup](exadb-d-setup.sql))
+1. Wallet is generated for client connection
+
+Connecting to an ExaDB-D environment is slightly different than connecting to Autonomous, and requires some additional steps in order to make it work. You can reference [exadb-d-setup](exadb-d-setup.sql) for notional commands to execute on the database to set the external IAM authentication methods, as well as initial example shared user and role. You will need to modify the shared user (dba_user_schema) and role (db_admin_role) to suit your own environment.
+
+The usage of roles to grant privileges to select database users is shown in the sql script, and is visualized in the below diagram.
+
+![IAM SSO User and Role Mapping](images/iam_sso_mapping.png)
+
+Unlike Autonomous, since ExaDB-D does not have the DBMS_CLOUD package natively installed you will execute the following command instead to enable external IAM authentication:
+
+`ALTER SYSTEM SET IDENTITY_PROVIDER_TYPE=OCI_IAM SCOPE=BOTH;`
+
+## Configure client wallet
