@@ -6,7 +6,6 @@
 -- create IAM group, assign users, create policy
 -- In this example 'OracleIdentityCloudService' is the name of the IAM domain which may be different than yours
 
-Allow group 'OracleIdentityCloudService'/'dba_users_group' to use autonomous-database-family in tenancy
 Allow group 'OracleIdentityCloudService'/'dba_users_group' to use database-connections in tenancy
 */ 
 
